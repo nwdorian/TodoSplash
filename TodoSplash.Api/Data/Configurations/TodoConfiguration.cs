@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TodoSplash.Api.Models;
+using TodoSplash.Api.Todos;
 
 namespace TodoSplash.Api.Data.Configurations;
 

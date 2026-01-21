@@ -1,4 +1,4 @@
-﻿namespace TodoSplash.Api.Models;
+﻿namespace TodoSplash.Api.Todos;
 
 public class Todo
 {

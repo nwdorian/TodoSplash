@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TodoSplash.Api.Models;
+using TodoSplash.Api.Todos;
 
 namespace TodoSplash.Api.Data;
 
