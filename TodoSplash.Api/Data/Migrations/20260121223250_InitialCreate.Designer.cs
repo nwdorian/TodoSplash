@@ -11,7 +11,7 @@ using TodoSplash.Api.Data;
 namespace TodoSplash.Api.Data.Migrations
 {
     [DbContext(typeof(TodoContext))]
-    [Migration("20260121182116_InitialCreate")]
+    [Migration("20260121223250_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -33,11 +33,14 @@ namespace TodoSplash.Api.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("IsComplete")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
