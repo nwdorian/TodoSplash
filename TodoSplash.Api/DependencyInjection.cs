@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using TodoSplash.Api.Data;
 
 namespace TodoSplash.Api;
@@ -15,5 +16,10 @@ public static class DependencyInjection
         {
             options.UseSqlServer(connectionString);
         });
+    }
+
+    public static void AddFluentValidation(this IServiceCollection services)
+    {
+        services.AddValidatorsFromAssembly(typeof(Program).Assembly);
     }
 }
