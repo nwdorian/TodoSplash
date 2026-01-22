@@ -6,6 +6,8 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDatabaseContext(builder.Configuration);
 
+builder.Services.AddFluentValidation();
+
 builder.Services.AddEndpoints();
 
 WebApplication app = builder.Build();
