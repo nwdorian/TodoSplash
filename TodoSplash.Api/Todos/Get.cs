@@ -12,7 +12,7 @@ public static class Get
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPost("todos", Handler).WithTags("Todos");
+            app.MapGet("todos", Handler).WithTags("Todos");
         }
 
         public static async Task<IResult> Handler(TodoContext context, CancellationToken cancellationToken)
