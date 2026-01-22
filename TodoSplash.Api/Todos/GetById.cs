@@ -12,7 +12,7 @@ public static class GetById
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapGet("todos", Handler).WithTags("Todos");
+            app.MapGet("todos/{id}", Handler).WithTags("Todos");
         }
 
         public static async Task<IResult> Handler(int id, TodoContext context, CancellationToken cancellationToken)
