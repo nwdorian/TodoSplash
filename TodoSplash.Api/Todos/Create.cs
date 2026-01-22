@@ -15,7 +15,7 @@ public static class Create
     {
         public Validator()
         {
-            RuleFor(t => t.Name).MaximumLength(100).WithMessage("Name can't be longer than 100 characters");
+            RuleFor(t => t.Name).NotEmpty().MaximumLength(100).WithMessage("Name can't be longer than 100 characters");
         }
     }
 
