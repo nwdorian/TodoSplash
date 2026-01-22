@@ -14,7 +14,11 @@ public static class Update
     {
         public Validator()
         {
-            RuleFor(t => t.Name).NotEmpty().MaximumLength(100).WithMessage("Name can't be longer than 100 characters.");
+            RuleFor(t => t.Name)
+                .NotEmpty()
+                .WithMessage("Name is required.")
+                .MaximumLength(100)
+                .WithMessage("Name can't be longer than 100 characters.");
         }
     }
 
@@ -36,7 +40,7 @@ public static class Update
             ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
             if (!validationResult.IsValid)
             {
-                return TypedResults.BadRequest(validationResult.Errors);
+                return TypedResults.ValidationProblem(validationResult.ToDictionary());
             }
 
             Todo? todo = await context.Todos.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
