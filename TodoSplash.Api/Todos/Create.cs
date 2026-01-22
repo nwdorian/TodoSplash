@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
 using TodoSplash.Api.Data;
 using TodoSplash.Api.Endpoints;
 
@@ -27,22 +26,15 @@ public static class Create
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPost("todos", Handler).WithTags("Todos");
+            app.MapPost("todos", Handler).WithTags("Todos").WithRequestValidation<Request>();
         }
 
         public static async Task<IResult> Handler(
             Request request,
-            IValidator<Request> validator,
             TodoContext context,
             CancellationToken cancellationToken
         )
         {
-            ValidationResult validationResult = await validator.ValidateAsync(request, cancellationToken);
-            if (!validationResult.IsValid)
-            {
-                return TypedResults.ValidationProblem(validationResult.ToDictionary());
-            }
-
             Todo todo = new() { Name = request.Name };
 
             context.Todos.Add(todo);

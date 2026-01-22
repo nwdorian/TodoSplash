@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using TodoSplash.Api.Infrastructure;
 
 namespace TodoSplash.Api.Endpoints;
 
@@ -32,5 +33,10 @@ public static class EndpointExtensions
         {
             endpoint.MapEndpoint(builder);
         }
+    }
+
+    public static RouteHandlerBuilder WithRequestValidation<TRequest>(this RouteHandlerBuilder app)
+    {
+        return app.AddEndpointFilter<ValidationFilter<TRequest>>().ProducesValidationProblem();
     }
 }
