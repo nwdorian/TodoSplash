@@ -31,5 +31,6 @@
         <Folder Include="Data\Configurations\" />
         <Folder Include="Data\Extensions\" />
         <Folder Include="Endpoints\" />
+        <Folder Include="Infrastructure\" />
     </ItemGroup>
 </Project>
