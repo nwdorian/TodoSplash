@@ -4,25 +4,29 @@ using TodoSplash.Api.Endpoints;
 
 namespace TodoSplash.Api.Todos;
 
-public static class Get
+public class Get(TodoContext context)
 {
     public record Response(int Id, string Name, bool IsComplete);
+
+    public async Task<IReadOnlyList<Response>> Handle(CancellationToken cancellationToken)
+    {
+        IReadOnlyList<Response> todos = await context
+            .Todos.AsNoTracking()
+            .Select(t => new Response(t.Id, t.Name, t.IsComplete))
+            .ToListAsync(cancellationToken);
+
+        return todos;
+    }
 
     public class Endpoint : IEndpoint
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapGet("todos", Handler).WithTags("Todos");
-        }
-
-        public static async Task<IResult> Handler(TodoContext context, CancellationToken cancellationToken)
-        {
-            IReadOnlyList<Response> todos = await context
-                .Todos.AsNoTracking()
-                .Select(t => new Response(t.Id, t.Name, t.IsComplete))
-                .ToListAsync(cancellationToken);
-
-            return TypedResults.Ok(todos);
+            app.MapGet(
+                    TodoEndpoints.Routes.Get,
+                    async (Get useCase, CancellationToken cancellationToken) => await useCase.Handle(cancellationToken)
+                )
+                .WithTags(TodoEndpoints.Tag);
         }
     }
 }

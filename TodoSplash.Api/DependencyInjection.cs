@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TodoSplash.Api.Data;
 using TodoSplash.Api.Infrastructure;
+using TodoSplash.Api.Todos;
 
 namespace TodoSplash.Api;
 
@@ -34,5 +35,14 @@ public static class DependencyInjection
                 context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
             };
         });
+    }
+
+    public static void AddTodoUseCases(this IServiceCollection services)
+    {
+        services.AddScoped<Get>();
+        services.AddScoped<GetById>();
+        services.AddScoped<Create>();
+        services.AddScoped<Delete>();
+        services.AddScoped<Update>();
     }
 }

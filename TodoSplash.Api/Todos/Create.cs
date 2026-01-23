@@ -4,7 +4,7 @@ using TodoSplash.Api.Endpoints;
 
 namespace TodoSplash.Api.Todos;
 
-public static class Create
+public class Create(TodoContext context)
 {
     public record Request(string Name);
 
@@ -22,25 +22,27 @@ public static class Create
         }
     }
 
+    public async Task<Response> Handle(Request request, CancellationToken cancellationToken)
+    {
+        Todo todo = new() { Name = request.Name };
+
+        context.Todos.Add(todo);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return new Response(todo.Id, todo.Name, todo.IsComplete);
+    }
+
     public class Endpoint : IEndpoint
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPost("todos", Handler).WithTags("Todos").WithRequestValidation<Request>();
-        }
-
-        public static async Task<IResult> Handler(
-            Request request,
-            TodoContext context,
-            CancellationToken cancellationToken
-        )
-        {
-            Todo todo = new() { Name = request.Name };
-
-            context.Todos.Add(todo);
-            await context.SaveChangesAsync(cancellationToken);
-
-            return TypedResults.Ok(new Response(todo.Id, todo.Name, todo.IsComplete));
+            app.MapPost(
+                    TodoEndpoints.Routes.Create,
+                    async (Request request, Create useCase, CancellationToken cancellationToken) =>
+                        await useCase.Handle(request, cancellationToken)
+                )
+                .WithTags(TodoEndpoints.Tag)
+                .WithRequestValidation<Request>();
         }
     }
 }

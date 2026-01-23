@@ -1,11 +1,13 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using TodoSplash.Api.Core.Primitives;
 using TodoSplash.Api.Data;
 using TodoSplash.Api.Endpoints;
+using TodoSplash.Api.Infrastructure;
 
 namespace TodoSplash.Api.Todos;
 
-public static class Update
+public class Update(TodoContext context)
 {
     public record Request(string Name, bool IsComplete);
 
@@ -21,32 +23,36 @@ public static class Update
         }
     }
 
+    public async Task<Result> Handle(int id, Request request, CancellationToken cancellationToken)
+    {
+        Todo? todo = await context.Todos.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
+        if (todo is null)
+        {
+            return TodoErrors.NotFoundById(id);
+        }
+
+        todo.Name = request.Name;
+        todo.IsComplete = request.IsComplete;
+
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
+    }
+
     public class Endpoint : IEndpoint
     {
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
-            app.MapPut("todos/{id}", Handler).WithTags("Todos").WithRequestValidation<Request>();
-        }
-
-        public static async Task<IResult> Handler(
-            int id,
-            Request request,
-            TodoContext context,
-            CancellationToken cancellationToken
-        )
-        {
-            Todo? todo = await context.Todos.FirstOrDefaultAsync(t => t.Id == id, cancellationToken);
-            if (todo is null)
-            {
-                return TypedResults.NotFound();
-            }
-
-            todo.Name = request.Name;
-            todo.IsComplete = request.IsComplete;
-
-            await context.SaveChangesAsync(cancellationToken);
-
-            return TypedResults.NoContent();
+            app.MapPut(
+                    TodoEndpoints.Routes.Update,
+                    async (int id, Request request, Update useCase, CancellationToken cancellationToken) =>
+                    {
+                        Result result = await useCase.Handle(id, request, cancellationToken);
+                        return result.Match(Results.NoContent, CustomResults.Problem);
+                    }
+                )
+                .WithTags(TodoEndpoints.Tag)
+                .WithRequestValidation<Request>();
         }
     }
 }

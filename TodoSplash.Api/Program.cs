@@ -5,6 +5,7 @@ using TodoSplash.Api.Endpoints;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDatabaseContext(builder.Configuration);
+builder.Services.AddTodoUseCases();
 builder.Services.AddCustomExceptionHandler();
 builder.Services.AddFluentValidation();
 builder.Services.AddEndpoints();
