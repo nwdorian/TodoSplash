@@ -37,6 +37,17 @@ public static class DependencyInjection
         });
     }
 
+    public static void AddCorsVitePolicy(this IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy(
+                "AllowVite",
+                policy => policy.WithOrigins("http://localhost:5173").AllowAnyMethod().AllowAnyHeader()
+            );
+        });
+    }
+
     public static void AddTodoUseCases(this IServiceCollection services)
     {
         services.AddScoped<Get>();

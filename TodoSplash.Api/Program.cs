@@ -8,10 +8,12 @@ builder.Services.AddDatabaseContext(builder.Configuration);
 builder.Services.AddTodoUseCases();
 builder.Services.AddCustomExceptionHandler();
 builder.Services.AddFluentValidation();
+builder.Services.AddCorsVitePolicy();
 builder.Services.AddEndpoints();
 
 WebApplication app = builder.Build();
 
+app.UseCors("AllowVite");
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 app.MapEndpoints();
