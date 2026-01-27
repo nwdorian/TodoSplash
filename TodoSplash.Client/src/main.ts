@@ -41,7 +41,16 @@ const refreshList = async () => {
 };
 
 const showError = (message: string) => {
-    errorAlert.innerText = message;
+    let displayMessage = message;
+
+    try {
+        const parsed = JSON.parse(message) as { errors: string[] };
+
+        if (parsed) {
+            displayMessage = parsed.errors.join("");
+        }
+    } catch {}
+    errorAlert.innerText = displayMessage;
     errorAlert.classList.remove("d-none");
 };
 
