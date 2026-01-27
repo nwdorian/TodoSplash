@@ -10,6 +10,10 @@
     display: none;
 }
 
+.container {
+    max-width: 800px;
+}
+
 .btn {
     border: 2px solid black;
     color: black;
