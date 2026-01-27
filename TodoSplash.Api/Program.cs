@@ -13,6 +13,8 @@ builder.Services.AddEndpoints();
 
 WebApplication app = builder.Build();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
 app.UseCors("AllowVite");
 app.UseExceptionHandler();
 app.UseStatusCodePages();

@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "start": "npm --prefix ./TodoSplash.Client run build && dotnet run --project ./TodoSplash.Api/TodoSplash.Api.csproj"
+  }
+}
