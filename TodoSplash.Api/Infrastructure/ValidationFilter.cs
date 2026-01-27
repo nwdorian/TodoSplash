@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
+using TodoSplash.Api.Core.Primitives;
 
 namespace TodoSplash.Api.Infrastructure;
 
@@ -9,11 +10,18 @@ public class ValidationFilter<TRequest>(IValidator<TRequest> validator) : IEndpo
     {
         TRequest? request = context.Arguments.OfType<TRequest>().First();
 
-        ValidationResult result = await validator.ValidateAsync(request, context.HttpContext.RequestAborted);
+        ValidationResult validationResult = await validator.ValidateAsync(request, context.HttpContext.RequestAborted);
 
-        if (!result.IsValid)
+        if (!validationResult.IsValid)
         {
-            return TypedResults.ValidationProblem(result.ToDictionary());
+            Result result = Result.Failure(
+                new ValidationError(
+                    validationResult
+                        .Errors.Select(f => Error.Validation(code: f.ErrorCode, description: f.ErrorMessage))
+                        .ToArray()
+                )
+            );
+            return CustomResults.Problem(result);
         }
 
         return await next(context);

@@ -32,9 +32,9 @@ public static class CustomResults
 
         return Results.Problem(
             title: GetTitle(result.Error),
-            detail: GetDetail(result.Error),
             type: GetType(result.Error.Type),
-            statusCode: GetStatusCode(result.Error.Type)
+            statusCode: GetStatusCode(result.Error.Type),
+            extensions: GetErrors(result)
         );
 
         static string GetTitle(Error error)
@@ -46,18 +46,6 @@ public static class CustomResults
                 ErrorType.NotFound => error.Code,
                 ErrorType.Conflict => error.Code,
                 _ => "Server failure",
-            };
-        }
-
-        static string GetDetail(Error error)
-        {
-            return error.Type switch
-            {
-                ErrorType.Validation => error.Description,
-                ErrorType.Problem => error.Description,
-                ErrorType.NotFound => error.Description,
-                ErrorType.Conflict => error.Description,
-                _ => "An unexpected error occurred",
             };
         }
 
@@ -82,6 +70,18 @@ public static class CustomResults
                 ErrorType.Conflict => StatusCodes.Status409Conflict,
                 _ => StatusCodes.Status500InternalServerError,
             };
+        }
+
+        static Dictionary<string, object?>? GetErrors(Result result)
+        {
+            if (result.Error is ValidationError validationError)
+            {
+                return new Dictionary<string, object?>
+                {
+                    { "errors", validationError.Errors.Select(e => e.Description) },
+                };
+            }
+            return new Dictionary<string, object?> { { "errors", new[] { result.Error.Description } } };
         }
     }
 }
