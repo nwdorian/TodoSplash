@@ -12,4 +12,18 @@ public static class TodoContextExtensions
 
         await context.Database.MigrateAsync();
     }
+
+    public static async Task SeedDatabase(this WebApplication app)
+    {
+        if (app.Environment.IsProduction())
+        {
+            return;
+        }
+
+        using IServiceScope scope = app.Services.CreateScope();
+
+        TodoContext context = scope.ServiceProvider.GetRequiredService<TodoContext>();
+
+        await SeedData.Handle(context);
+    }
 }

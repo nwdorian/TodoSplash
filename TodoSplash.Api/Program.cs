@@ -21,5 +21,6 @@ app.UseStatusCodePages();
 app.MapEndpoints();
 
 await app.ApplyMigrations();
+await app.SeedDatabase();
 
 await app.RunAsync();
