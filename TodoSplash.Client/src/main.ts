@@ -145,13 +145,13 @@ const checkForChanges = () => {
 };
 
 const displayCount = (itemCount: number) => {
-    const name = itemCount === 1 ? "to-do" : "to-dos";
+    const name = itemCount === 1 ? "item" : "items";
     const counter = document.getElementById("counter");
     if (!counter) {
         return;
     }
 
-    counter.innerText = `${itemCount} ${name}`;
+    counter.innerText = `Total: ${itemCount} ${name}`;
 };
 
 const renderTable = async () => {
@@ -163,19 +163,23 @@ const renderTable = async () => {
         let isCompleteCheckbox = document.createElement("input");
         isCompleteCheckbox.type = "checkbox";
         isCompleteCheckbox.disabled = true;
+        isCompleteCheckbox.className = "form-check-input";
         isCompleteCheckbox.checked = item.isComplete;
 
         let editButton = document.createElement("button");
         editButton.innerText = "Edit";
+        editButton.className = "btn btn-warning me-2";
         editButton.addEventListener("click", () => displayEditForm(item.id));
 
         let deleteButton = document.createElement("button");
         deleteButton.innerText = "Delete";
+        deleteButton.className = "btn btn-danger";
         deleteButton.addEventListener("click", () => deleteItem(item.id));
 
         let tr = tableBody.insertRow();
 
         let td1 = tr.insertCell(0);
+        td1.className = "align-middle";
         td1.appendChild(isCompleteCheckbox);
 
         let td2 = tr.insertCell(1);
@@ -183,10 +187,9 @@ const renderTable = async () => {
         td2.appendChild(textNode);
 
         let td3 = tr.insertCell(2);
+        td3.className = "text-end";
         td3.appendChild(editButton);
-
-        let td4 = tr.insertCell(3);
-        td4.appendChild(deleteButton);
+        td3.appendChild(deleteButton);
     });
 };
 

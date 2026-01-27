@@ -9,3 +9,8 @@
 #success-message {
     display: none;
 }
+
+.btn {
+    border: 2px solid black;
+    color: black;
+}
